@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIRTHVS</title>
+<meta name="description" content="Preserve. Protect. Remain.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --ash: #2b2a28;
+    --stone: #8c8a84;
+    --dim: #b9b3a6;
+    --bone: #e6e0d3;
+    --display: "Cormorant Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --text: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { background: var(--black); color: var(--bone); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    font-family: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+    padding: clamp(24px, 5vw, 56px);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fine film grain */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  header { height: 72px; display: flex; align-items: center; }
+  header img { max-height: 72px; width: auto; display: block; }
+  header .wordmark {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+  }
+
+  main { padding: 48px 0; }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(3.4rem, 13vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: -0.015em;
+    margin: 0 0 clamp(28px, 5vw, 56px);
+  }
+  h1 span { display: block; }
+
+  .line {
+    font-family: var(--display);
+    font-size: clamp(1.25rem, 2.4vw, 1.6rem);
+    line-height: 1.35;
+    color: var(--dim);
+    margin: 0 0 1.6rem;
+    max-width: 30ch;
+  }
+
+  a.message {
+    display: inline-block;
+    color: var(--bone);
+    text-decoration: none;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid var(--bone);
+    transition: color 0.15s, border-color 0.15s;
+  }
+  a.message:hover { color: var(--stone); border-bottom-color: var(--stone); }
+  a.message:focus-visible { outline: 2px solid var(--bone); outline-offset: 6px; }
+
+  footer { color: var(--stone); font-size: 0.85rem; }
+
+  /* Entrance: three lines settle in one after the other */
+  .rise { opacity: 0; transform: translateY(10px); animation: rise 1.1s ease-out forwards; }
+  .d1 { animation-delay: 0.2s; }
+  .d2 { animation-delay: 0.7s; }
+  .d3 { animation-delay: 1.2s; }
+  .d4 { animation-delay: 1.9s; }
+  @keyframes rise { to { opacity: 1; transform: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rise { opacity: 1; transform: none; animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header id="brand">
+  <img id="logo" src="logo.png" alt="VIRTHVS">
+</header>
+
+<main>
+  <h1>
+    <span class="rise d1">Preserve.</span>
+    <span class="rise d2">Protect.</span>
+    <span class="rise d3">Remain.</span>
+  </h1>
+  <p class="line rise d4">Limited pieces. Available by private message only.</p>
+  <a class="message rise d4" id="dm" href="#">Send a message</a>
+</main>
+
+<footer>
+  <span>VIRTHVS</span>
+</footer>
+
+<script>
+/* CONFIG: Instagram username of the brand, without @ */
+const IG_HANDLE = "";
+
+const dm = document.getElementById("dm");
+if (IG_HANDLE) {
+  dm.href = "https://ig.me/m/" + IG_HANDLE;
+  dm.rel = "noopener";
+} else {
+  dm.removeAttribute("href");
+}
+
+/* Use the logo file if present, otherwise the wordmark */
+document.getElementById("logo").addEventListener("error", function () {
+  document.getElementById("brand").innerHTML = '<span class="wordmark">VIRTHVS</span>';
+});
+</script>
+</body>
+</html>
