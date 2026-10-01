@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VIRTHVS</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --black: #080808;
+    --ash: #2b2a28;
+    --stone: #8c8a84;
+    --dim: #b9b3a6;
+    --bone: #e6e0d3;
+    --error: #d9a08c;
+    --display: "Cormorant Garamond", "Iowan Old Style", Georgia, "Times New Roman", serif;
+    --text: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { background: var(--black); color: var(--bone); }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--text);
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fine film grain, fixed over the whole page */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0.07;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: clamp(28px, 6vw, 72px) clamp(20px, 5vw, 56px) clamp(24px, 4vw, 40px);
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(40px, 7vw, 104px);
+    align-items: start;
+  }
+
+  .intro { position: sticky; top: clamp(28px, 6vw, 72px); }
+
+  .brand { height: 72px; display: flex; align-items: center; margin-bottom: clamp(40px, 8vw, 96px); }
+  .brand img { max-height: 72px; width: auto; display: block; }
+  .brand .wordmark {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+  }
+
+  h1 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(2.8rem, 6.4vw, 4.6rem);
+    line-height: 0.98;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.25rem;
+  }
+
+  .lede {
+    font-family: var(--display);
+    font-size: 1.4rem;
+    line-height: 1.35;
+    color: var(--dim);
+    max-width: 26ch;
+    margin: 0 0 clamp(32px, 5vw, 56px);
+  }
+
+  dl.facts { margin: 0; border-top: 1px solid var(--ash); }
+  dl.facts > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--ash);
+  }
+  dl.facts dt { color: var(--stone); font-size: 0.9rem; }
+  dl.facts dd { margin: 0; text-align: right; }
+
+  /* Form */
+  form { display: block; }
+
+  fieldset { border: 0; margin: 0 0 clamp(32px, 5vw, 48px); padding: 0; min-width: 0; }
+  legend {
+    font-family: var(--display);
+    font-size: 1.6rem;
+    font-weight: 500;
+    padding: 0;
+    margin-bottom: 0.4rem;
+  }
+
+  .row { display: grid; gap: 0 1.5rem; grid-template-columns: 1fr; }
+  .row.two { grid-template-columns: 1fr 1fr; }
+
+  .field { margin-top: 1.4rem; }
+  .field label { display: block; color: var(--stone); font-size: 0.85rem; margin-bottom: 0.15rem; }
+  .field .hint { color: var(--stone); font-size: 0.82rem; margin: 0.45rem 0 0; max-width: 52ch; }
+
+  input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+    width: 100%;
+    background: transparent;
+    color: var(--bone);
+    border: 0;
+    border-bottom: 1px solid var(--ash);
+    border-radius: 0;
+    padding: 0.7rem 0;
+    font: inherit;
+    font-size: 1rem;
+    transition: border-color 0.15s;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  input::placeholder { color: #55534f; }
+  input:hover, select:hover { border-bottom-color: var(--stone); }
+  input:focus, select:focus { outline: none; border-bottom-color: var(--bone); }
+  input:focus-visible, select:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; }
+
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--bone);
+    box-shadow: 0 0 0 1000px var(--black) inset;
+    caret-color: var(--bone);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%238c8a84' stroke-width='1.4'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.2rem center;
+    padding-right: 1.6rem;
+  }
+  select option { background: var(--black); color: var(--bone); }
+
+  .total {
+    display: none;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 1.8rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--ash);
+  }
+  .total.on { display: flex; }
+  .total span:first-child { color: var(--stone); font-size: 0.9rem; }
+  .total span:last-child { font-family: var(--display); font-size: 1.9rem; font-weight: 500; }
+  .shipping-note { color: var(--stone); font-size: 0.82rem; margin: 0.4rem 0 0; }
+
+  .terms { display: flex; gap: 0.9rem; align-items: flex-start; margin-top: 0.4rem; }
+  .terms input {
+    appearance: none;
+    -webkit-appearance: none;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    margin: 0.2rem 0 0;
+    border: 1px solid var(--stone);
+    background: transparent;
+    border-radius: 0;
+    cursor: pointer;
+  }
+  .terms input:checked {
+    background-color: var(--bone);
+    border-color: var(--bone);
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='10' viewBox='0 0 12 10'><path d='M1 5l3.5 3.5L11 1.5' fill='none' stroke='%23080808' stroke-width='1.8'/></svg>");
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+  .terms input:focus-visible { outline: 2px solid var(--bone); outline-offset: 3px; }
+  .terms label { color: var(--dim); font-size: 0.95rem; cursor: pointer; }
+
+  .actions { margin-top: 1.8rem; }
+  button.submit {
+    font: inherit;
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    background: var(--bone);
+    color: var(--black);
+    border: 1px solid var(--bone);
+    border-radius: 0;
+    padding: 1rem 2.6rem;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s;
+  }
+  button.submit:hover:not(:disabled) { background: transparent; color: var(--bone); }
+  button.submit:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; }
+  button.submit:disabled { opacity: 0.45; cursor: default; }
+
+  .after { color: var(--stone); font-size: 0.85rem; margin: 1rem 0 0; max-width: 52ch; }
+
+  .status { min-height: 1.4rem; margin: 1rem 0 0; font-size: 0.95rem; color: var(--error); }
+
+  /* Confirmation and closed states */
+  .state { display: none; padding-top: 0.5rem; }
+  .state.on { display: block; animation: settle 0.5s ease-out both; }
+  .state h2 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    margin: 0 0 1rem;
+  }
+  .state p { color: var(--dim); max-width: 44ch; margin: 0 0 0.8rem; }
+  @keyframes settle { from { opacity: 0; } to { opacity: 1; } }
+
+  .trap { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+  footer {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 5vw, 56px) clamp(28px, 5vw, 56px);
+  }
+  footer p {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    color: var(--stone);
+    border-top: 1px solid var(--ash);
+    padding-top: 1.4rem;
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .wrap { grid-template-columns: 1fr; }
+    .intro { position: static; }
+    .brand { margin-bottom: 40px; }
+  }
+  @media (max-width: 460px) {
+    .row.two { grid-template-columns: 1fr; }
+    button.submit { width: 100%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .state.on { animation: none; }
+    * { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <section class="intro" aria-labelledby="piece">
+    <div class="brand" id="brand">
+      <img id="logo" src="logo.png" alt="VIRTHVS">
+    </div>
+    <h1 id="piece"></h1>
+    <p class="lede">Limited edition. Produced after the window closes.</p>
+    <dl class="facts">
+      <div><dt>Price</dt><dd id="f-price"></dd></div>
+      <div><dt>Window closes</dt><dd id="f-close"></dd></div>
+      <div><dt>Shipping begins</dt><dd id="f-ship"></dd></div>
+    </dl>
+  </section>
+
+  <main>
+    <div class="state" id="closed" role="status">
+      <h2>The window is closed.</h2>
+      <p>This edition is no longer taking pre-orders.</p>
+    </div>
+
+    <div class="state" id="done" role="status">
+      <h2>Pre-order registered.</h2>
+      <p>A confirmation was sent to your email.</p>
+      <p>Payment instructions follow by direct message on Instagram.</p>
+    </div>
+
+    <form id="order" novalidate>
+      <div class="trap" aria-hidden="true">
+        <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+
+      <fieldset>
+        <legend>Order</legend>
+
+        <div class="row two">
+          <div class="field">
+            <label for="size">Size</label>
+            <select id="size" name="size" required></select>
+          </div>
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <select id="quantity" name="quantity" required></select>
+          </div>
+        </div>
+
+        <div class="total" id="total" aria-live="polite">
+          <span>Total</span><span id="total-amount"></span>
+        </div>
+        <p class="shipping-note" id="shipping-note" hidden></p>
+      </fieldset>
+
+      <fieldset>
+        <legend>Contact</legend>
+
+        <div class="field">
+          <label for="name">Full name</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="instagram">Instagram username</label>
+          <input id="instagram" name="instagram" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="username" required>
+          <p class="hint" id="ig-hint"></p>
+        </div>
+        <div class="field">
+          <label for="phone">Phone (optional, for the courier)</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel">
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Delivery</legend>
+
+        <div class="field">
+          <label for="street">Address</label>
+          <input id="street" name="street" type="text" autocomplete="street-address" required>
+        </div>
+        <div class="row two">
+          <div class="field">
+            <label for="postal">Postal code</label>
+            <input id="postal" name="postal" type="text" autocomplete="postal-code" required>
+          </div>
+          <div class="field">
+            <label for="city">City</label>
+            <input id="city" name="city" type="text" autocomplete="address-level2" required>
+          </div>
+        </div>
+        <div class="field">
+          <label for="country">Country</label>
+          <input id="country" name="country" type="text" autocomplete="country-name" value="Portugal" required>
+        </div>
+      </fieldset>
+
+      <div class="terms">
+        <input id="terms" name="terms" type="checkbox" required>
+        <label for="terms" id="terms-label"></label>
+      </div>
+
+      <div class="actions">
+        <button class="submit" id="submit" type="submit">Place pre-order</button>
+        <p class="after">Payment instructions follow by direct message on Instagram.</p>
+        <p class="status" id="status" role="alert"></p>
+      </div>
+    </form>
+  </main>
+
+</div>
+
+<footer>
+  <p>Preserve. Protect. Remain.</p>
+</footer>
+
+<script>
+/* ------------------------------------------------------------------
+   CONFIG: edit only this block
+------------------------------------------------------------------- */
+const CONFIG = {
+  PIECE_NAME: "[Piece name]",
+  PRICE: null,                      // number in EUR, e.g. 35. null shows a placeholder.
+  SIZES: ["S", "M", "L", "XL"],     // confirm the final size run
+  MAX_QUANTITY: 5,
+  WINDOW_CLOSE_LABEL: "[date]",     // shown on the page, e.g. "18 October 2026"
+  WINDOW_CLOSE_ISO: "",             // optional, e.g. "2026-10-18T23:59:00+01:00". Closes the form automatically.
+  SHIPPING_BEGINS_LABEL: "[date]",  // shown on the page and in the terms
+  SHIPPING_NOTE: "",                // optional, e.g. "Shipping is calculated separately."
+  INSTAGRAM_HANDLE: "",             // brand account, without @. Used in the follow hint.
+  ENDPOINT: ""                      // Apps Script web app URL. Empty keeps orders closed.
+};
+/* ----------------------------------------------------------------- */
+
+const $ = (id) => document.getElementById(id);
+const PREVIEW = new URLSearchParams(location.search).has("preview");
+const money = (n) => n.toLocaleString("en-IE", { style: "currency", currency: "EUR" });
+
+/* Page content from config */
+document.title = "VIRTHVS | " + CONFIG.PIECE_NAME;
+$("piece").textContent = CONFIG.PIECE_NAME;
+$("f-price").textContent = CONFIG.PRICE ? money(CONFIG.PRICE) : "[price]";
+$("f-close").textContent = CONFIG.WINDOW_CLOSE_LABEL;
+$("f-ship").textContent = CONFIG.SHIPPING_BEGINS_LABEL;
+$("terms-label").textContent =
+  "I understand this is a limited pre-order, produced after the window closes. Shipping begins on " +
+  CONFIG.SHIPPING_BEGINS_LABEL + ".";
+
+$("ig-hint").textContent = CONFIG.INSTAGRAM_HANDLE
+  ? "Payment instructions are sent here. Follow @" + CONFIG.INSTAGRAM_HANDLE + " so the message reaches you."
+  : "Payment instructions are sent here. Make sure you can receive messages from us.";
+
+if (CONFIG.SHIPPING_NOTE) {
+  $("shipping-note").textContent = CONFIG.SHIPPING_NOTE;
+  $("shipping-note").hidden = false;
+}
+
+/* Logo: use the file if present, otherwise the wordmark */
+$("logo").addEventListener("error", () => {
+  $("brand").innerHTML = '<span class="wordmark">VIRTHVS</span>';
+});
+
+/* Size and quantity options */
+const sizeSel = $("size");
+sizeSel.innerHTML = '<option value="" disabled selected>Select</option>' +
+  CONFIG.SIZES.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
+
+const qtySel = $("quantity");
+for (let i = 1; i <= CONFIG.MAX_QUANTITY; i++) {
+  qtySel.insertAdjacentHTML("beforeend", '<option value="' + i + '">' + i + "</option>");
+}
+
+function updateTotal() {
+  if (!CONFIG.PRICE) { $("total").classList.remove("on"); return; }
+  $("total-amount").textContent = money(CONFIG.PRICE * Number(qtySel.value));
+  $("total").classList.add("on");
+}
+qtySel.addEventListener("change", updateTotal);
+updateTotal();
+
+/* Closed window */
+function windowClosed() {
+  if (!CONFIG.WINDOW_CLOSE_ISO) return false;
+  return Date.now() > new Date(CONFIG.WINDOW_CLOSE_ISO).getTime();
+}
+if (windowClosed()) {
+  $("order").style.display = "none";
+  $("closed").classList.add("on");
+}
+
+/* Submit */
+const form = $("order");
+const statusEl = $("status");
+const btn = $("submit");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  statusEl.textContent = "";
+
+  if (form.website.value) return; // honeypot
+
+  if (windowClosed()) {
+    form.style.display = "none";
+    $("closed").classList.add("on");
+    return;
+  }
+
+  if (!form.checkValidity()) {
+    const firstInvalid = form.querySelector(":invalid");
+    const label = firstInvalid && firstInvalid.id === "terms"
+      ? "Accept the terms to place the pre-order."
+      : "Complete the highlighted field to continue.";
+    statusEl.textContent = label;
+    if (firstInvalid) firstInvalid.focus();
+    return;
+  }
+
+  if (!CONFIG.ENDPOINT && !PREVIEW) {
+    statusEl.textContent = "Pre-orders are not open yet.";
+    return;
+  }
+
+  const payload = {
+    piece: CONFIG.PIECE_NAME,
+    size: form.size.value,
+    quantity: Number(form.quantity.value),
+    total: CONFIG.PRICE ? CONFIG.PRICE * Number(form.quantity.value) : null,
+    name: form.name.value.trim(),
+    email: form.email.value.trim(),
+    instagram: form.instagram.value.trim().replace(/^@+/, ""),
+    phone: form.phone.value.trim(),
+    street: form.street.value.trim(),
+    postal: form.postal.value.trim(),
+    city: form.city.value.trim(),
+    country: form.country.value.trim(),
+    terms_accepted: form.terms.checked,
+    terms_text: $("terms-label").textContent,
+    submitted_at: new Date().toISOString()
+  };
+
+  btn.disabled = true;
+  btn.textContent = "Sending";
+
+  try {
+    if (CONFIG.ENDPOINT) {
+      // no-cors: the request is delivered, the response cannot be read
+      await fetch(CONFIG.ENDPOINT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
+      });
+    } else {
+      console.log("Preview mode, payload not sent:", payload);
+    }
+    form.style.display = "none";
+    $("done").classList.add("on");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  } catch (err) {
+    statusEl.textContent = "The pre-order was not sent. Check your connection and try again.";
+    btn.disabled = false;
+    btn.textContent = "Place pre-order";
+  }
+});
+</script>
+</body>
+</html>
