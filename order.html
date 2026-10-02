@@ -146,6 +146,25 @@
   }
   select option { background: var(--black); color: var(--bone); }
 
+  .piece { display: grid; grid-template-columns: 1fr auto; gap: 0 1.5rem; align-items: end; }
+  .piece .link-btn { margin-bottom: 0.1rem; }
+  .link-btn {
+    background: none;
+    border: 0;
+    border-radius: 0;
+    color: var(--dim);
+    font: inherit;
+    font-size: 0.9rem;
+    padding: 0.7rem 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transition: color 0.15s;
+  }
+  .link-btn:hover { color: var(--bone); }
+  .link-btn:focus-visible { outline: 2px solid var(--bone); outline-offset: 4px; }
+  #add-piece { margin-top: 0.8rem; }
+
   .total {
     display: none;
     justify-content: space-between;
@@ -284,16 +303,9 @@
       <fieldset>
         <legend>Order</legend>
 
-        <div class="row two">
-          <div class="field">
-            <label for="size">Size</label>
-            <select id="size" name="size" required></select>
-          </div>
-          <div class="field">
-            <label for="quantity">Quantity</label>
-            <select id="quantity" name="quantity" required></select>
-          </div>
-        </div>
+        <div id="pieces"></div>
+        <button type="button" class="link-btn" id="add-piece">Add another piece</button>
+        <p class="hint" id="pieces-hint"></p>
 
         <div class="total" id="total" aria-live="polite">
           <span>Total</span><span id="total-amount"></span>
@@ -371,16 +383,16 @@
    CONFIG: edit only this block
 ------------------------------------------------------------------- */
 const CONFIG = {
-  PIECE_NAME: "RITUAL",
+  PIECE_NAME: "Ritual",
   PRICE: 25,                      // number in EUR, e.g. 35. null shows a placeholder.
   SIZES: ["S", "M", "L", "XL"],     // confirm the final size run
-  MAX_QUANTITY: 5,
-  WINDOW_CLOSE_LABEL: "26 October 2026",     // shown on the page, e.g. "18 October 2026"
+  MAX_PIECES: 3,                    // pieces per order, each with its own size
+  WINDOW_CLOSE_LABEL: "16 October 2026",     // shown on the page, e.g. "18 October 2026"
   WINDOW_CLOSE_ISO: "",             // optional, e.g. "2026-10-18T23:59:00+01:00". Closes the form automatically.
-  SHIPPING_BEGINS_LABEL: "15 October 2026",  // shown on the page and in the terms
+  SHIPPING_BEGINS_LABEL: "26 October 2026",  // shown on the page and in the terms
   SHIPPING_NOTE: "",                // optional, e.g. "Shipping is calculated separately."
   INSTAGRAM_HANDLE: "",             // brand account, without @. Used in the follow hint.
-  ENDPOINT: " https://script.google.com/macros/s/AKfycbywp2FKi_uFjxaPHyExe7c611ZLCvFOvWqMAMa11JPAqZGhzH1tBXhyiXhKyJsYdI89/exec"                      // Apps Script web app URL. Empty keeps orders closed.
+  ENDPOINT: "https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQ7MyiOpKn6z4D6z5wlNCvHGNAqJFzHQQTE_cntC1KPXGe_0MVQTqGpkLmLQ3VB6x_5nvud-Epb9gc_MKiOUW6iGky1IrdQ3PM_Z-0VFfLm1IWyGzfwlIFZz1qh9sbZkwR4Ek0ha0wZ4TmbxFinaak0fsNguxurCDHVaIqXkbndtxUy4wzirHrLfc9WMaFeQ5IG7qHZg6TWY7WCZOQrb4R8SEhaALfjXLsQe7qXyuziG8AYH1U-eueYaH9HILOyoHW-HY40yQH0_7QrowFiWgZ4pGo2gQ&lib=MJ3p3y_4nb7GFF2l_KMttXI3wxOUd64-_"                      // Apps Script web app URL. Empty keeps orders closed.
 };
 /* ----------------------------------------------------------------- */
 
@@ -416,23 +428,67 @@ $("logo").addEventListener("error", () => {
   $("brand").innerHTML = '<span class="wordmark">VIRTHVS</span>';
 });
 
-/* Size and quantity options */
-const sizeSel = $("size");
-sizeSel.innerHTML = '<option value="" disabled selected>Select</option>' +
-  CONFIG.SIZES.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
+/* Pieces: one row per piece, each with its own size */
+const piecesEl = $("pieces");
+const addBtn = $("add-piece");
 
-const qtySel = $("quantity");
-for (let i = 1; i <= CONFIG.MAX_QUANTITY; i++) {
-  qtySel.insertAdjacentHTML("beforeend", '<option value="' + i + '">' + i + "</option>");
+function sizeOptions() {
+  return '<option value="" disabled selected>Select</option>' +
+    CONFIG.SIZES.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
+}
+
+function currentSizes() {
+  return Array.from(piecesEl.querySelectorAll("select")).map((el) => el.value);
+}
+
+function refreshRows() {
+  const rows = Array.from(piecesEl.children);
+  rows.forEach((row, i) => {
+    const n = i + 1;
+    const label = row.querySelector("label");
+    const select = row.querySelector("select");
+    const remove = row.querySelector(".link-btn");
+    select.id = "size-" + n;
+    label.htmlFor = "size-" + n;
+    label.textContent = rows.length > 1 ? "Piece " + n + ", size" : "Size";
+    remove.hidden = rows.length === 1;
+    remove.setAttribute("aria-label", "Remove piece " + n);
+  });
+  addBtn.hidden = rows.length >= CONFIG.MAX_PIECES;
+  $("pieces-hint").textContent = CONFIG.MAX_PIECES > 1
+    ? "Up to " + CONFIG.MAX_PIECES + " pieces per order."
+    : "";
+  updateTotal();
+}
+
+function addRow() {
+  if (piecesEl.children.length >= CONFIG.MAX_PIECES) return;
+  const row = document.createElement("div");
+  row.className = "piece";
+  row.innerHTML =
+    '<div class="field"><label></label><select name="size" required>' + sizeOptions() + "</select></div>" +
+    '<button type="button" class="link-btn">Remove</button>';
+  row.querySelector("select").addEventListener("change", updateTotal);
+  row.querySelector(".link-btn").addEventListener("click", () => {
+    row.remove();
+    refreshRows();
+  });
+  piecesEl.appendChild(row);
+  refreshRows();
 }
 
 function updateTotal() {
   if (!CONFIG.PRICE) { $("total").classList.remove("on"); return; }
-  $("total-amount").textContent = money(CONFIG.PRICE * Number(qtySel.value));
+  $("total-amount").textContent = money(CONFIG.PRICE * piecesEl.children.length);
   $("total").classList.add("on");
 }
-qtySel.addEventListener("change", updateTotal);
-updateTotal();
+
+addBtn.addEventListener("click", () => {
+  addRow();
+  const selects = piecesEl.querySelectorAll("select");
+  selects[selects.length - 1].focus();
+});
+addRow();
 
 /* Closed window */
 function windowClosed() {
@@ -476,11 +532,12 @@ form.addEventListener("submit", async (e) => {
     return;
   }
 
+  const sizes = currentSizes();
   const payload = {
     piece: CONFIG.PIECE_NAME,
-    size: form.size.value,
-    quantity: Number(form.quantity.value),
-    total: CONFIG.PRICE ? CONFIG.PRICE * Number(form.quantity.value) : null,
+    sizes: sizes,
+    quantity: sizes.length,
+    total: CONFIG.PRICE ? CONFIG.PRICE * sizes.length : null,
     name: form.name.value.trim(),
     email: form.email.value.trim(),
     instagram: form.instagram.value.trim().replace(/^@+/, ""),
