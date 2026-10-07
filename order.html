@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-PT">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -275,49 +275,48 @@
       <img id="logo" src="logo.png" alt="VIRTHVS">
     </div>
     <h1 id="piece"></h1>
-    <p class="lede">Limited edition. Produced after the window closes.</p>
+    <p class="lede">Edição limitada. Produzida depois de a janela fechar.</p>
     <dl class="facts">
-      <div><dt>Price</dt><dd id="f-price"></dd></div>
-      <div><dt>Window closes</dt><dd id="f-close"></dd></div>
-      <div><dt>Shipping begins</dt><dd id="f-ship"></dd></div>
+      <div><dt>Preço</dt><dd id="f-price"></dd></div>
+      <div><dt>Fecho da janela</dt><dd id="f-close"></dd></div>
+      <div><dt>Entrega</dt><dd id="f-ship"></dd></div>
     </dl>
   </section>
 
   <main>
     <div class="state" id="closed" role="status">
-      <h2>The window is closed.</h2>
-      <p>This edition is no longer taking pre-orders.</p>
+      <h2>A janela está fechada.</h2>
+      <p>Esta edição já não recebe pré-encomendas.</p>
     </div>
 
     <div class="state" id="done" role="status">
-      <h2>Pre-order registered.</h2>
-      <p>A confirmation was sent to your email.</p>
-      <p id="done-pay">Payment instructions follow by direct message on Instagram.</p>
+      <h2>Pré-encomenda registada.</h2>
+      <p>Foi enviada uma confirmação por email.</p>
+      <p id="done-pay">As instruções de pagamento seguem por mensagem direta no Instagram.</p>
     </div>
 
     <form id="order" novalidate>
       <div class="trap" aria-hidden="true">
-        <label>Leave this field empty <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+        <label>Deixar este campo vazio <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
       </div>
 
       <fieldset>
-        <legend>Order</legend>
+        <legend>Encomenda</legend>
 
         <div id="pieces"></div>
-        <button type="button" class="link-btn" id="add-piece">Add another piece</button>
+        <button type="button" class="link-btn" id="add-piece">Adicionar outra peça</button>
         <p class="hint" id="pieces-hint"></p>
 
         <div class="total" id="total" aria-live="polite">
           <span>Total</span><span id="total-amount"></span>
         </div>
-        <p class="shipping-note" id="shipping-note" hidden></p>
       </fieldset>
 
       <fieldset>
-        <legend>Contact</legend>
+        <legend>Contacto</legend>
 
         <div class="field">
-          <label for="name">Full name</label>
+          <label for="name">Nome completo</label>
           <input id="name" name="name" type="text" autocomplete="name" required>
         </div>
         <div class="field">
@@ -325,37 +324,15 @@
           <input id="email" name="email" type="email" autocomplete="email" required>
         </div>
         <div class="field">
-          <label for="instagram">Instagram username</label>
-          <input id="instagram" name="instagram" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="username" required>
+          <label for="instagram">Utilizador do Instagram</label>
+          <input id="instagram" name="instagram" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="utilizador" required>
           <p class="hint" id="ig-hint"></p>
-        </div>
-        <div class="field">
-          <label for="phone">Phone (optional, for the courier)</label>
-          <input id="phone" name="phone" type="tel" autocomplete="tel">
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>Delivery</legend>
-
-        <div class="field">
-          <label for="street">Address</label>
-          <input id="street" name="street" type="text" autocomplete="street-address" required>
-        </div>
-        <div class="row two">
-          <div class="field">
-            <label for="postal">Postal code</label>
-            <input id="postal" name="postal" type="text" autocomplete="postal-code" required>
-          </div>
-          <div class="field">
-            <label for="city">City</label>
-            <input id="city" name="city" type="text" autocomplete="address-level2" required>
-          </div>
-        </div>
-        <div class="field">
-          <label for="country">Country</label>
-          <input id="country" name="country" type="text" autocomplete="country-name" value="Portugal" required>
-        </div>
+        <legend>Entrega</legend>
+        <p class="hint">Entrega em mão. O local e a hora combinam-se por mensagem.</p>
       </fieldset>
 
       <div class="terms">
@@ -364,9 +341,9 @@
       </div>
 
       <div class="actions">
-        <button class="submit" id="submit" type="submit">Place pre-order</button>
+        <button class="submit" id="submit" type="submit">Fazer pré-encomenda</button>
         <p class="after" id="after"></p>
-        <p class="after" id="privacy">Your details are used only to process and ship this order. To have them deleted, send us a message.</p>
+        <p class="after" id="privacy">Dados usados apenas para tratar esta encomenda. Para os eliminar, basta enviar uma mensagem.</p>
         <p class="status" id="status" role="alert"></p>
       </div>
     </form>
@@ -383,45 +360,39 @@
    CONFIG: edit only this block
 ------------------------------------------------------------------- */
 const CONFIG = {
-  PIECE_NAME: "Ritual",
-  PRICE: 25,                      // number in EUR, e.g. 35. null shows a placeholder.
-  SIZES: ["S", "M", "L", "XL"],     // confirm the final size run
-  MAX_PIECES: 3,                    // pieces per order, each with its own size
-  WINDOW_CLOSE_LABEL: "16 October 2026",     // shown on the page, e.g. "18 October 2026"
-  WINDOW_CLOSE_ISO: "",             // optional, e.g. "2026-10-18T23:59:00+01:00". Closes the form automatically.
-  SHIPPING_BEGINS_LABEL: "26 October 2026",  // shown on the page and in the terms
-  SHIPPING_NOTE: "",                // optional, e.g. "Shipping is calculated separately."
-  INSTAGRAM_HANDLE: "",             // brand account, without @. Used in the follow hint.
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbywp2FKi_uFjxaPHyExe7c611ZLCvFOvWqMAMa11JPAqZGhzH1tBXhyiXhKyJsYdI89/exec"                      // Apps Script web app URL. Empty keeps orders closed.
+  PIECE_NAME: "RITUAL",
+  PRICE: 25,                      // número em EUR, por exemplo 35. null mostra um marcador.
+  SIZES: ["S", "M", "L", "XL"],     // tem de coincidir com o Code.gs
+  MAX_PIECES: 3,                    // peças por encomenda, cada uma com o seu tamanho
+  WINDOW_CLOSE_LABEL: "16 de outubro",     // texto mostrado na página, por exemplo "18 de outubro de 2026"
+  WINDOW_CLOSE_ISO: "",             // opcional, por exemplo "2026-10-18T23:59:00+01:00". Fecha o formulário sozinho.
+  DELIVERY_FROM_LABEL: "26 de outubro",    // mostrado na página e nas condições, por exemplo "25 de outubro de 2026"
+  INSTAGRAM_HANDLE: "",             // conta da marca, sem @. Usado na indicação para seguir a conta.
+  ENDPOINT: "script.google.com/macros/s/AKfycbywp2FKi_uFjxaPHyExe7c611ZLCvFOvWqMAMa11JPAqZGhzH1tBXhyiXhKyJsYdI89/exec"                      // endereço /exec do Apps Script. Vazio mantém as encomendas fechadas.
 };
 /* ----------------------------------------------------------------- */
 
 const $ = (id) => document.getElementById(id);
 const PREVIEW = new URLSearchParams(location.search).has("preview");
-const money = (n) => n.toLocaleString("en-IE", { style: "currency", currency: "EUR" });
+const money = (n) => n.toLocaleString("pt-PT", { style: "currency", currency: "EUR" });
 
 /* Page content from config */
 document.title = "VIRTHVS | " + CONFIG.PIECE_NAME;
 $("piece").textContent = CONFIG.PIECE_NAME;
-$("f-price").textContent = CONFIG.PRICE ? money(CONFIG.PRICE) : "[price]";
+$("f-price").textContent = CONFIG.PRICE ? money(CONFIG.PRICE) : "[preço]";
 $("f-close").textContent = CONFIG.WINDOW_CLOSE_LABEL;
-$("f-ship").textContent = CONFIG.SHIPPING_BEGINS_LABEL;
+$("f-ship").textContent = "Em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL;
 $("terms-label").textContent =
-  "I understand this is a limited pre-order, produced after the window closes. Shipping begins on " +
-  CONFIG.SHIPPING_BEGINS_LABEL + ".";
+  "Compreendo que esta é uma pré-encomenda de edição limitada, produzida depois de a janela fechar. " +
+  "A entrega é feita em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL + ".";
 
 $("ig-hint").textContent = CONFIG.INSTAGRAM_HANDLE
-  ? "Payment instructions are sent here. Follow @" + CONFIG.INSTAGRAM_HANDLE + " so the message reaches you."
-  : "Payment instructions are sent here. Make sure you can receive messages from us.";
+  ? "As instruções de pagamento são enviadas aqui. Seguir @" + CONFIG.INSTAGRAM_HANDLE + " para a mensagem chegar."
+  : "As instruções de pagamento são enviadas aqui.";
 
 $("after").textContent = CONFIG.INSTAGRAM_HANDLE
-  ? "Payment instructions follow by direct message, only from @" + CONFIG.INSTAGRAM_HANDLE + "."
-  : "Payment instructions follow by direct message, only from our official Instagram account.";
-
-if (CONFIG.SHIPPING_NOTE) {
-  $("shipping-note").textContent = CONFIG.SHIPPING_NOTE;
-  $("shipping-note").hidden = false;
-}
+  ? "As instruções de pagamento seguem por mensagem direta, apenas a partir de @" + CONFIG.INSTAGRAM_HANDLE + "."
+  : "As instruções de pagamento seguem por mensagem direta, apenas a partir da conta oficial de Instagram.";
 
 /* Logo: use the file if present, otherwise the wordmark */
 $("logo").addEventListener("error", () => {
@@ -433,7 +404,7 @@ const piecesEl = $("pieces");
 const addBtn = $("add-piece");
 
 function sizeOptions() {
-  return '<option value="" disabled selected>Select</option>' +
+  return '<option value="" disabled selected>Selecionar</option>' +
     CONFIG.SIZES.map((s) => '<option value="' + s + '">' + s + "</option>").join("");
 }
 
@@ -450,13 +421,13 @@ function refreshRows() {
     const remove = row.querySelector(".link-btn");
     select.id = "size-" + n;
     label.htmlFor = "size-" + n;
-    label.textContent = rows.length > 1 ? "Piece " + n + ", size" : "Size";
+    label.textContent = rows.length > 1 ? "Peça " + n + ", tamanho" : "Tamanho";
     remove.hidden = rows.length === 1;
-    remove.setAttribute("aria-label", "Remove piece " + n);
+    remove.setAttribute("aria-label", "Remover peça " + n);
   });
   addBtn.hidden = rows.length >= CONFIG.MAX_PIECES;
   $("pieces-hint").textContent = CONFIG.MAX_PIECES > 1
-    ? "Up to " + CONFIG.MAX_PIECES + " pieces per order."
+    ? "Até " + CONFIG.MAX_PIECES + " peças por encomenda."
     : "";
   updateTotal();
 }
@@ -467,7 +438,7 @@ function addRow() {
   row.className = "piece";
   row.innerHTML =
     '<div class="field"><label></label><select name="size" required>' + sizeOptions() + "</select></div>" +
-    '<button type="button" class="link-btn">Remove</button>';
+    '<button type="button" class="link-btn">Remover</button>';
   row.querySelector("select").addEventListener("change", updateTotal);
   row.querySelector(".link-btn").addEventListener("click", () => {
     row.remove();
@@ -520,15 +491,15 @@ form.addEventListener("submit", async (e) => {
   if (!form.checkValidity()) {
     const firstInvalid = form.querySelector(":invalid");
     const label = firstInvalid && firstInvalid.id === "terms"
-      ? "Accept the terms to place the pre-order."
-      : "Complete the highlighted field to continue.";
+      ? "Aceitar as condições para fazer a pré-encomenda."
+      : "Preencher o campo assinalado para continuar.";
     statusEl.textContent = label;
     if (firstInvalid) firstInvalid.focus();
     return;
   }
 
   if (!CONFIG.ENDPOINT && !PREVIEW) {
-    statusEl.textContent = "Pre-orders are not open yet.";
+    statusEl.textContent = "As pré-encomendas ainda não estão abertas.";
     return;
   }
 
@@ -541,22 +512,17 @@ form.addEventListener("submit", async (e) => {
     name: form.name.value.trim(),
     email: form.email.value.trim(),
     instagram: form.instagram.value.trim().replace(/^@+/, ""),
-    phone: form.phone.value.trim(),
-    street: form.street.value.trim(),
-    postal: form.postal.value.trim(),
-    city: form.city.value.trim(),
-    country: form.country.value.trim(),
     terms_accepted: form.terms.checked,
     terms_text: $("terms-label").textContent,
     submitted_at: new Date().toISOString()
   };
 
   btn.disabled = true;
-  btn.textContent = "Sending";
+  btn.textContent = "A enviar";
 
   try {
     if (CONFIG.ENDPOINT) {
-      // no-cors: the request is delivered, the response cannot be read
+      // no-cors: o pedido é entregue, a resposta não pode ser lida
       await fetch(CONFIG.ENDPOINT, {
         method: "POST",
         mode: "no-cors",
@@ -570,9 +536,9 @@ form.addEventListener("submit", async (e) => {
     $("done").classList.add("on");
     window.scrollTo({ top: 0, behavior: "smooth" });
   } catch (err) {
-    statusEl.textContent = "The pre-order was not sent. Check your connection and try again.";
+    statusEl.textContent = "Não foi possível enviar. Verificar a ligação e tentar novamente.";
     btn.disabled = false;
-    btn.textContent = "Place pre-order";
+    btn.textContent = "Fazer pré-encomenda";
   }
 });
 </script>
