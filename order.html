@@ -323,11 +323,6 @@
           <label for="email">Email</label>
           <input id="email" name="email" type="email" autocomplete="email" required>
         </div>
-        <div class="field">
-          <label for="instagram">Utilizador do Instagram</label>
-          <input id="instagram" name="instagram" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="utilizador" required>
-          <p class="hint" id="ig-hint"></p>
-        </div>
       </fieldset>
 
       <fieldset>
@@ -385,10 +380,6 @@ $("f-ship").textContent = "Em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL;
 $("terms-label").textContent =
   "Compreendo que esta é uma pré-encomenda de edição limitada, produzida depois de a janela fechar. " +
   "A entrega é feita em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL + ".";
-
-$("ig-hint").textContent = CONFIG.INSTAGRAM_HANDLE
-  ? "As instruções de pagamento são enviadas aqui. Seguir @" + CONFIG.INSTAGRAM_HANDLE + " para a mensagem chegar."
-  : "As instruções de pagamento são enviadas aqui.";
 
 $("after").textContent = CONFIG.INSTAGRAM_HANDLE
   ? "As instruções de pagamento seguem por mensagem direta, apenas a partir de @" + CONFIG.INSTAGRAM_HANDLE + "."
@@ -511,7 +502,6 @@ form.addEventListener("submit", async (e) => {
     total: CONFIG.PRICE ? CONFIG.PRICE * sizes.length : null,
     name: form.name.value.trim(),
     email: form.email.value.trim(),
-    instagram: form.instagram.value.trim().replace(/^@+/, ""),
     terms_accepted: form.terms.checked,
     terms_text: $("terms-label").textContent,
     submitted_at: new Date().toISOString()
