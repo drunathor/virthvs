@@ -275,17 +275,17 @@
       <img id="logo" src="logo.png" alt="VIRTHVS">
     </div>
     <h1 id="piece"></h1>
-    <p class="lede">Edição limitada. Produzida depois de a janela fechar.</p>
+    <p class="lede">Edição limitada. Produzida depois de o período de encomendas fechar.</p>
     <dl class="facts">
       <div><dt>Preço</dt><dd id="f-price"></dd></div>
-      <div><dt>Fecho da janela</dt><dd id="f-close"></dd></div>
+      <div><dt>Fecho do período de encomendas</dt><dd id="f-close"></dd></div>
       <div><dt>Entrega</dt><dd id="f-ship"></dd></div>
     </dl>
   </section>
 
   <main>
     <div class="state" id="closed" role="status">
-      <h2>A janela está fechada.</h2>
+      <h2>O período de encomendas está fechado.</h2>
       <p>Esta edição já não recebe pré-encomendas.</p>
     </div>
 
@@ -362,7 +362,7 @@ const CONFIG = {
   WINDOW_CLOSE_LABEL: "23 de outubro",     // texto mostrado na página, por exemplo "18 de outubro de 2026"
   WINDOW_CLOSE_ISO: "2026-10-23T23:59:00+01:00",             // opcional, por exemplo "2026-10-18T23:59:00+01:00". Fecha o formulário sozinho.
   DELIVERY_FROM_LABEL: "6 de novembro",    // mostrado na página e nas condições, por exemplo "25 de outubro de 2026"
-  INSTAGRAM_HANDLE: "@virthvs.wear",             // conta da marca, sem @. Usado na indicação para seguir a conta.
+  INSTAGRAM_HANDLE: "virthvs.wear",             // conta da marca, sem @. Usado na indicação para seguir a conta.
   ENDPOINT: "https://script.google.com/macros/s/AKfycbxNqCxXHEkDGLGl8LicvYYSHQNrj2xb8NmI5TZUC-jiDC8hoafXtFJidFJng1PikIMeSw/exec"                      // endereço /exec do Apps Script. Vazio mantém as encomendas fechadas.
 };
 /* ----------------------------------------------------------------- */
@@ -378,7 +378,7 @@ $("f-price").textContent = CONFIG.PRICE ? money(CONFIG.PRICE) : "[preço]";
 $("f-close").textContent = CONFIG.WINDOW_CLOSE_LABEL;
 $("f-ship").textContent = "Em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL;
 $("terms-label").textContent =
-  "Compreendo que esta é uma pré-encomenda de edição limitada, produzida depois de a janela fechar. " +
+  "Compreendo que se trata de uma pré-encomenda de uma edição limitada, produzida após o encerramento do período de encomendas." +
   "A entrega é feita em mão, a partir de " + CONFIG.DELIVERY_FROM_LABEL + ".";
 
 $("after").textContent = CONFIG.INSTAGRAM_HANDLE
